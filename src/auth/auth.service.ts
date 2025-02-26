@@ -20,11 +20,11 @@ export class AuthService {
     return this.authenticatedResponse(user);
   }
 
-  private authenticatedResponse({ id, username }: User) {
-    const token = this.jwtService.sign({ sub: id, username });
-    return {
-      user: { id, username },
-      access_token: token,
-    };
+  private authenticatedResponse(user: User) {
+    const token = this.jwtService.sign({
+      sub: user.id,
+      username: user.username,
+    });
+    return { user, token };
   }
 }

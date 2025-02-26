@@ -8,6 +8,10 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
+import { Room } from './chat/room/room.entity';
+import { User } from './user/user.entity';
+import { ChatModule } from './chat/chat.module';
+import { Message } from './chat/message/message.entity';
 
 @Module({
   imports: [
@@ -37,11 +41,13 @@ import { GraphQLModule } from '@nestjs/graphql';
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.database'),
         autoLoadEntities: true,
+        entities: [User, Room, Message],
         synchronize: true, // TODO: Disable in production
       }),
     }),
     AuthModule,
     UserModule,
+    ChatModule,
   ],
 })
 export class AppModule {}

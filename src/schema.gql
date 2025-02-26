@@ -3,22 +3,40 @@
 # ------------------------------------------------------
 
 type AuthResponse {
-  access_token: String!
-  user: UserDTO!
+  token: String!
+  user: User!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 input LoginInput {
   password: String!
   username: String!
 }
 
+type Message {
+  id: ID!
+  room: Room!
+  sender: User!
+  text: String!
+  timestamp: DateTime!
+}
+
 type Mutation {
+  createRoom(name: String!): Room!
+  joinRoom(name: String!): Room!
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
+  sendMessage(room: String!, text: String!): Message!
 }
 
 type Query {
-  me: UserDTO!
+  getRoom(name: String!): Room
+  getRoomMessages(limit: Float, room: String!): [Message!]!
+  me: User!
 }
 
 input RegisterInput {
@@ -26,7 +44,16 @@ input RegisterInput {
   username: String!
 }
 
-type UserDTO {
+type Room {
   id: ID!
-  username: String!
+  messages: [Message!]!
+  name: String!
+  participants: [User!]!
+}
+
+type User {
+  id: ID!
+  messages: [Message!]!
+  rooms: [Room!]!
+  username: ID!
 }

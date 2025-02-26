@@ -3,10 +3,10 @@ import { RegisterInput } from './dto/register.input';
 import { LoginInput } from './dto/login.input';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthResponse } from './dto/auth-response.dto';
-import { UserDTO } from '../user/user.dto';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from './gql-auth.guard';
-import { CurrentUser } from './decorators/current-user-decorator';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from '../user/user.entity';
 
 @Resolver()
 export class AuthResolver {
@@ -22,9 +22,9 @@ export class AuthResolver {
     return this.authService.login(username, password);
   }
 
-  @Query(() => UserDTO)
+  @Query(() => User)
   @UseGuards(GqlAuthGuard)
-  me(@CurrentUser() user: UserDTO) {
+  me(@CurrentUser() user: User) {
     return user;
   }
 }
