@@ -3,8 +3,7 @@ import { Env } from "@/lib/config";
 import { authService } from "@/lib/auth/AuthService";
 import { BehaviorSubject, combineLatest, lastValueFrom } from "rxjs";
 import { SessionStorageService } from "@/lib/storage/SessionStorageService";
-import { Room } from "@/lib/chat/chat.types";
-import { ChatEvents } from "chatnest-server/dist/chat/chat-events.enum";
+import { ChatEvents, Room } from "@/lib/chat/chat.types";
 
 class ChatService {
   activeRoom = new SessionStorageService<Room["room"]>("active_room");

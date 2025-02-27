@@ -4,7 +4,7 @@ import { useState } from "react";
 import useRxState from "@/lib/storage/useRxState";
 import { chatService } from "@/lib/chat/ChatService";
 import { useChatSocket } from "@/lib/chat/useChatSocket";
-import { ChatEvents } from "chatnest-server/dist/chat/chat-events.enum";
+import { ChatEvents } from "@/lib/chat/chat.types";
 
 const MessageInput = () => {
   const activeRoom = useRxState(chatService.activeRoom.data$);

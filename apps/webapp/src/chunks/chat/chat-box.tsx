@@ -4,12 +4,11 @@ import { useLazyQuery } from "@apollo/client";
 import { GetRoomMessages } from "@/lib/chat/chat.gql";
 import MessageInput from "./message-input";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Message } from "@/lib/chat/chat.types";
+import { ChatEvents, Message } from "@/lib/chat/chat.types";
 import useRxState from "@/lib/storage/useRxState";
 import { authService } from "@/lib/auth/AuthService";
 import { chatService } from "@/lib/chat/ChatService";
 import { useChatSocket } from "@/lib/chat/useChatSocket";
-import { ChatEvents } from "chatnest-server/dist/chat/chat-events.enum";
 
 const ChatBox = () => {
   const activeRoom = useRxState(chatService.activeRoom.data$);
