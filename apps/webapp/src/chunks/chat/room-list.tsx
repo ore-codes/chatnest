@@ -38,16 +38,16 @@ const RoomList = () => {
   }, [router]);
 
   if (loading)
-    return <div className="w-64 p-4 bg-gray-900 text-white">Loading...</div>;
+    return <div className="w-64 p-4 bg-primary text-white">Loading...</div>;
   if (error)
     return (
-      <div className="w-64 p-4 bg-gray-900 text-white">Error loading rooms</div>
+      <div className="w-64 p-4 bg-primary text-white">Error loading rooms</div>
     );
 
   return (
     <>
       <div className="w-64 bg-primary text-white p-4 flex flex-col">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 pt-8 lg:pt-0">
           <h2 className="text-lg font-bold">Chats</h2>
           <div className="flex gap-4 items-center">
             <button
