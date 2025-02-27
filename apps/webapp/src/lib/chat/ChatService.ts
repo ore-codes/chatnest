@@ -11,16 +11,15 @@ class ChatService {
   public socket$ = new BehaviorSubject<Socket | null>(null);
 
   constructor() {
-    combineLatest([
-      authService.tokenStorage.data$,
-      this.activeRoom.data$,
-    ]).subscribe(([token, room]) => {
-      if (token) {
-        this.connect(token, room);
-      } else {
-        this.disconnect();
-      }
-    });
+    combineLatest([authService.token.data$, this.activeRoom.data$]).subscribe(
+      ([token, room]) => {
+        if (token) {
+          this.connect(token, room);
+        } else {
+          this.disconnect();
+        }
+      },
+    );
   }
 
   private connect(token: string, room: Room["room"] | null): void {

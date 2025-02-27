@@ -39,7 +39,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const authLink = new ApolloLink((operation, forward) => {
   return new Observable((observer) => {
-    firstValueFrom(authService.tokenStorage.data$)
+    firstValueFrom(authService.token.data$)
       .then((token) => {
         operation.setContext(({ headers = {} }) => ({
           headers: {

@@ -30,8 +30,8 @@ const RegisterForm: FC = () => {
   const [registerFn, mutation] = useMutation(RegisterMutation, {
     async onCompleted(data) {
       await Promise.all([
-        authService.userStorage.setData(data.register.user),
-        authService.tokenStorage.setData(data.register.token),
+        authService.user.setData(data.register.user),
+        authService.token.setData(data.register.token),
       ]);
       router.replace("/dashboard");
     },

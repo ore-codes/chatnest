@@ -4,14 +4,14 @@ import { User } from "./auth.types";
 import { IDBStorageService } from "@/lib/storage/IdbStorageService";
 
 class AuthService {
-  userStorage = new IDBStorageService<User>("user");
-  tokenStorage = new IDBStorageService<string>("access_token");
+  user = new IDBStorageService<User>("user");
+  token = new IDBStorageService<string>("access_token");
 
-  isAuthenticated$ = this.userStorage.data$.pipe(map((user) => Boolean(user)));
+  isAuthenticated$ = this.user.data$.pipe(map((user) => Boolean(user)));
 
   async logout() {
-    await this.userStorage.clear();
-    await this.tokecoonsole.nStorage.clear();
+    await this.user.clear();
+    await this.token.clear();
   }
 }
 

@@ -26,8 +26,8 @@ const LoginForm: FC = () => {
   const [loginFn, mutation] = useMutation(LoginMutation, {
     async onCompleted(data) {
       await Promise.all([
-        authService.userStorage.setData(data.login.user),
-        authService.tokenStorage.setData(data.login.token),
+        authService.user.setData(data.login.user),
+        authService.token.setData(data.login.token),
       ]);
       router.replace("/dashboard");
     },

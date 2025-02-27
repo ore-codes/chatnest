@@ -14,7 +14,7 @@ const ChatBox = () => {
   const activeRoom = useRxState(chatService.activeRoom.data$);
   const [getRoomMessages, messagesQuery] = useLazyQuery(GetRoomMessages);
   const [messages, setMessages] = useState<Message[]>([]);
-  const authUser = useRxState(authService.userStorage.data$);
+  const authUser = useRxState(authService.user.data$);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const { socket } = useChatSocket();
 
