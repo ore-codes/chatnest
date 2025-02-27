@@ -2,15 +2,23 @@ import type { Config } from "tailwindcss";
 
 export default {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/primereact/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        neutral: "#96c624",
+        primary: "#203d2f",
+        secondary: "#083E2C",
+        text: "#0C2039",
+        light: "#F5F5F5",
+        dark: "#292D32",
+        placeholder: "#9095A1",
+        white: "#FFFFFF",
+        danger: "#E33629",
+        lightGrey: "#FBFBFB",
+        warning: "#E8871E",
       },
     },
   },

@@ -9,92 +9,93 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RoomService } from './room/room.service';
-import { UserService } from '../user/user.service';
 import { MessageService } from './message/message.service';
+import { ChatEvents } from './chat-events.enum';
+import { UseGuards } from '@nestjs/common';
+import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
+import { AuthenticatedSocket } from '../auth/authenticated-socket.interface';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
 })
+@UseGuards(WsJwtGuard)
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
   constructor(
-    private roomService: RoomService,
-    private messageService: MessageService,
-    private usersService: UserService,
+    private readonly roomService: RoomService,
+    private readonly messageService: MessageService,
   ) {}
 
-  handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
+  async handleConnection(client: AuthenticatedSocket) {
+    try {
+      console.log(`Client connected: ${client.id}`);
+    } catch (error) {
+      console.error('WebSocket Authentication Failed:', error.message);
+      client.disconnect();
+    }
   }
 
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
   }
 
-  @SubscribeMessage('joinRoom')
+  @SubscribeMessage(ChatEvents.JOIN_ROOM)
   async handleJoinRoom(
-    @MessageBody() payload: { username: string; room: string },
-    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: { room: string },
+    @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    const { username, room } = payload;
+    const { room } = payload;
+    const user = client.user;
 
-    const user = await this.usersService.findOne(username);
-    if (!user) {
-      client.emit('error', 'User not found');
-      return;
-    }
+    const joinedRoom = await this.roomService.findOne(room);
+    await client.join(room);
 
-    const joinedRoom = await this.roomService.joinRoom(user, room);
-    client.join(room);
-
-    this.server
-      .to(room)
-      .emit('message', { text: `${username} joined the room.` });
+    this.server.to(room).emit(ChatEvents.MESSAGE, {
+      text: `${user.username} joined the room.`,
+    });
     this.server.to(room).emit(
-      'activeUsers',
+      ChatEvents.ACTIVE_USERS,
       joinedRoom.participants.map((u) => u.username),
     );
   }
 
-  @SubscribeMessage('sendMessage')
+  @SubscribeMessage(ChatEvents.SEND_MESSAGE)
   async handleSendMessage(
-    @MessageBody() payload: { sender: string; text: string; room: string },
-    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: { text: string; room: string },
+    @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    const { sender, text, room } = payload;
+    const { text, room } = payload;
     const timestamp = new Date().toISOString();
-
-    const user = await this.usersService.findOne(sender);
-    if (!user) {
-      client.emit('error', 'User not found');
-      return;
-    }
+    const user = client.user;
 
     await this.messageService.saveMessage(user, room, text);
 
-    this.server.to(room).emit('message', { sender, text, timestamp });
-  }
-
-  @SubscribeMessage('leaveRoom')
-  async handleLeaveRoom(
-    @MessageBody() payload: { username: string; room: string },
-    @ConnectedSocket() client: Socket,
-  ) {
-    const { username, room } = payload;
-
-    client.leave(room);
     this.server
       .to(room)
-      .emit('message', { text: `${username} left the room.` });
+      .emit(ChatEvents.MESSAGE, { sender: user, text, timestamp });
+  }
+
+  @SubscribeMessage(ChatEvents.LEAVE_ROOM)
+  async handleLeaveRoom(
+    @MessageBody() payload: { room: string },
+    @ConnectedSocket() client: AuthenticatedSocket,
+  ) {
+    const { room } = payload;
+    const user = client.user;
+
+    await client.leave(room);
+    this.server.to(room).emit(ChatEvents.MESSAGE, {
+      text: `${user.username} left the room.`,
+    });
 
     const roomDetails = await this.roomService.findRoomByName(room);
     if (roomDetails) {
       this.server.to(room).emit(
-        'activeUsers',
+        ChatEvents.ACTIVE_USERS,
         roomDetails.participants.map((u) => u.username),
       );
     }

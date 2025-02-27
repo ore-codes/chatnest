@@ -4,7 +4,7 @@ import { LoginInput } from './dto/login.input';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthResponse } from './dto/auth-response.dto';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from './gql-auth.guard';
+import { GqlJwtGuard } from './guards/gql-jwt.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from '../user/user.entity';
 
@@ -23,7 +23,7 @@ export class AuthResolver {
   }
 
   @Query(() => User)
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlJwtGuard)
   me(@CurrentUser() user: User) {
     return user;
   }

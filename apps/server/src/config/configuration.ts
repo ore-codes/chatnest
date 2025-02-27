@@ -4,7 +4,7 @@ export default () => ({
   port: parseInt(process.env.PORT, 10) || 2457,
   jwt: {
     secret: process.env.JWT_SECRET,
-    expiresIn: process.env.JWT_EXPIRES || '1h',
+    expiresIn: process.env.JWT_EXPIRES || '30d',
   },
   database: {
     type: 'postgres',
