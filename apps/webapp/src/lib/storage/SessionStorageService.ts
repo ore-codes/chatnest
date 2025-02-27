@@ -2,6 +2,7 @@ import { AbstractStorageService } from "./AbstractStorageService";
 
 export class SessionStorageService<T> extends AbstractStorageService<T> {
   protected initialize() {
+    if (typeof window === "undefined") return;
     const storedValue = sessionStorage.getItem(this.key);
     if (storedValue) {
       try {

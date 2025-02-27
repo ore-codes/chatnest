@@ -3,6 +3,8 @@ import { AbstractStorageService } from "./AbstractStorageService";
 
 export class IDBStorageService<T> extends AbstractStorageService<T> {
   protected async initialize() {
+    if (typeof window === "undefined") return;
+
     const storedValue = await get<T>(this.key);
     this.subject.next(storedValue || null);
   }
