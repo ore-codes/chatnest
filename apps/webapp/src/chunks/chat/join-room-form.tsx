@@ -55,7 +55,7 @@ const JoinRoomForm: FC<{ onClose: () => void }> = (props) => {
   }, [roomQuery.loading, joinRoomMutation.loading]);
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-8 text-black">
       <h1 className="font-semibold">Join chat</h1>
       <div className="flex flex-col gap-1">
         <label className="text-sm" htmlFor="name">
