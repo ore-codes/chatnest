@@ -42,7 +42,6 @@ import { Message } from './chat/message/message.entity';
         database: configService.get<string>('database.database'),
         autoLoadEntities: true,
         entities: [User, Room, Message],
-        synchronize: true, // TODO: Disable in production
       }),
     }),
     AuthModule,

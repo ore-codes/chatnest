@@ -9,8 +9,11 @@ import { Icon } from "@iconify/react";
 import { useCallback, useRef } from "react";
 import Modal, { ModalRef } from "@/components/modal";
 import JoinRoomForm from "@/chunks/chat/join-room-form";
+import { authService } from "@/lib/auth/AuthService";
+import { useRouter } from "next/navigation";
 
 const RoomList = () => {
+  const router = useRouter();
   const { data, loading, error } = useQuery(GetJoinedRooms, {
     pollInterval: 20000,
   });
@@ -29,6 +32,11 @@ const RoomList = () => {
     [markMessagesAsRead],
   );
 
+  const logout = useCallback(() => {
+    authService.logout();
+    router.push("/login");
+  }, [router]);
+
   if (loading)
     return <div className="w-64 p-4 bg-gray-900 text-white">Loading...</div>;
   if (error)
@@ -41,15 +49,20 @@ const RoomList = () => {
       <div className="w-64 bg-primary text-white p-4 flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Chats</h2>
-          <button
-            className="hover:scale-105"
-            onClick={() => joinRoomModalRef.current?.present()}
-          >
-            <Icon icon="mingcute:plus-fill" className="size-5" />
-          </button>
+          <div className="flex gap-4 items-center">
+            <button
+              className="hover:scale-105"
+              onClick={() => joinRoomModalRef.current?.present()}
+            >
+              <Icon icon="mingcute:plus-fill" className="size-5" />
+            </button>
+            <button className="hover:scale-105" onClick={logout}>
+              <Icon icon="streamline:logout-1-solid" className="size-5" />
+            </button>
+          </div>
         </div>
         <div className="flex flex-col space-y-3">
-          {data.getJoinedRooms.map((chat: Room) => (
+          {data.joinedRooms.map((chat: Room) => (
             <button
               key={chat.room.id}
               onClick={() => openChat(chat.room)}

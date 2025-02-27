@@ -49,9 +49,9 @@ type Mutation {
 }
 
 type Query {
-  getJoinedRooms: [JoinedRoomDTO!]!
-  getRoom(name: String!): Room
+  joinedRooms: [JoinedRoomDTO!]!
   me: User!
+  room(name: String!): Room
   roomMessages(limit: Float, room: String!): [Message!]!
 }
 

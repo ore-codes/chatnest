@@ -11,7 +11,7 @@ class AuthService {
 
   async logout() {
     await this.userStorage.clear();
-    await this.tokenStorage.clear();
+    await this.tokecoonsole.nStorage.clear();
   }
 }
 

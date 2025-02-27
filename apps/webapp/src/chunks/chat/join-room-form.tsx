@@ -36,7 +36,7 @@ const JoinRoomForm: FC<{ onClose: () => void }> = (props) => {
   const handleSubmit = form.handleSubmit(async () => {
     const { data } = await getRoomByName({ variables: form.getValues() });
 
-    if (data.getRoom || isCreating) {
+    if (data.room || isCreating) {
       await joinRoomFn({ variables: form.getValues() });
       props.onClose();
     } else {

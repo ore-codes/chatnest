@@ -26,12 +26,12 @@ export class RoomResolver {
   }
 
   @Query(() => Room, { nullable: true })
-  async getRoom(@Args('name') name: string): Promise<Room> {
+  async room(@Args('name') name: string): Promise<Room> {
     return this.roomService.findRoomByName(name);
   }
 
   @Query(() => [JoinedRoomDTO])
-  async getJoinedRooms(@CurrentUser() user: User): Promise<JoinedRoomDTO[]> {
+  async joinedRooms(@CurrentUser() user: User): Promise<JoinedRoomDTO[]> {
     return this.roomService.getJoinedRooms(user);
   }
 }

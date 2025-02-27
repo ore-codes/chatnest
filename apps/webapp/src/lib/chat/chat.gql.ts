@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GetJoinedRooms = gql`
   query GetJoinedRooms {
-    getJoinedRooms {
+    joinedRooms {
       room {
         id
         name
@@ -18,7 +18,7 @@ export const GetJoinedRooms = gql`
 
 export const GetRoomByName = gql`
   query GetRoom($name: String!) {
-    getRoom(name: $name) {
+    room(name: $name) {
       id
       name
     }
