@@ -2,6 +2,7 @@ import { map } from "rxjs";
 
 import { User } from "./auth.types";
 import { IDBStorageService } from "@/lib/storage/IdbStorageService";
+import { apolloClient } from "@/providers/apollo-provider";
 
 class AuthService {
   user = new IDBStorageService<User>("user");
@@ -10,8 +11,13 @@ class AuthService {
   isAuthenticated$ = this.user.data$.pipe(map((user) => Boolean(user)));
 
   async logout() {
-    await this.user.clear();
-    await this.token.clear();
+    const { chatService } = await import("@/lib/chat/ChatService");
+    chatService.activeRoom.clear();
+    await Promise.all([
+      this.user.clear(),
+      this.token.clear(),
+      apolloClient.clearStore(),
+    ]);
   }
 }
 

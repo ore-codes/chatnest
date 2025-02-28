@@ -60,13 +60,13 @@ const authLink = new ApolloLink((operation, forward) => {
   });
 });
 
-const client = new ApolloClient({
+export const apolloClient = new ApolloClient({
   link: from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
 });
 
 const Apollo: FC<PropsWithChildren> = ({ children }) => {
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+  return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
 };
 
 export default Apollo;
